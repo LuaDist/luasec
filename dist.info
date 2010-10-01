@@ -1,0 +1,15 @@
+--- This file is part of LuaDist project
+
+name = "luasec"
+version = "0.4"
+
+desc = "LuaSec is a binding for OpenSSL library to provide TLS/SSL communication. It takes an already established TCP connection and creates a secure session between the peers."
+author = "Bruno Silvestre"
+license = "MIT/X11"
+url = "http://www.inf.puc-rio.br/~brunoos/luasec/"
+maintainer = "Peter Drahoš"
+
+depends = {
+	"openssl ~>1.0",
+	"lua ~>5.1"
+}
