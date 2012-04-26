@@ -1,33 +1,37 @@
-# Copyright (C) 2007-2009 LuaDist.
+# Copyright (C) 2007-2012 LuaDist.
 # Submitted by David Manura
 # Redistribution and use of this file is allowed according to the terms of the MIT license.
 # For details see the COPYRIGHT file distributed with LuaDist.
 # Please note that the package source code is licensed under its own license.
 
-PROJECT(luasec C)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-INCLUDE(dist.cmake)
+project ( luasec C )
+cmake_minimum_required ( VERSION 2.6 )
+include ( cmake/dist.cmake )
+include ( lua )
 
-FIND_LIBRARY(OPENSSL_SSL_LIBRARIES NAMES ssl ssleay32 ssleay32MD)
-FIND_LIBRARY(OPENSSL_CRYPTO_LIBRARIES NAMES crypto)
-IF(NOT OPENSSL_SSL_LIBRARIES)
-	MESSAGE("Cannot find openssl.")
-ENDIF()
+find_library ( OPENSSL_SSL_LIBRARIES NAMES ssl ssleay32 ssleay32MD )
+find_library ( OPENSSL_CRYPTO_LIBRARIES NAMES crypto )
+if ( NOT OPENSSL_SSL_LIBRARIES )
+  message ( "Cannot find openssl." )
+endif ()
 
 # Build modules.
-IF (WIN32 AND NOT CYGWIN)
-        SET(SOCKET_LIBRARY ws2_32)
-        SET(SOCKETC src/wsocket.c)
-ELSE ()
-        SET(SOCKETC src/usocket.c)
-ENDIF (WIN32 AND NOT CYGWIN)
+if ( WIN32 AND NOT CYGWIN )
+  set ( SOCKET_LIBRARY ws2_32 )
+  set ( SOCKETC src/wsocket.c )
+else ()
+  set ( SOCKETC src/usocket.c )
+endif ()
 
-ADD_LUA_MODULE(ssl src/timeout.c src/buffer.c src/io.c src/context.c src/ssl.c ${SOCKETC})
-TARGET_LINK_LIBRARIES(ssl ${OPENSSL_SSL_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES} ${SOCKET_LIBRARY})
+install_lua_module ( ssl.context ssl.core ALL_IN_ONE
+    src/timeout.c src/buffer.c src/io.c src/context.c src/ssl.c ${SOCKETC}
+    LINK ${OPENSSL_SSL_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARIES} ${SOCKET_LIBRARY} )
+install_lua_module ( ssl src/ssl.lua )
+install_lua_module ( ssl.https src/https.lua )
+install_example ( samples/ )
+install_data ( LICENSE )
 
-# Install all files and documentation
-INSTALL (TARGETS ssl DESTINATION ${INSTALL_CMOD})
-INSTALL (FILES src/ssl.lua DESTINATION ${INSTALL_LMOD})
-INSTALL (FILES src/https.lua DESTINATION ${INSTALL_LMOD}/ssl)
-INSTALL (DIRECTORY samples/ DESTINATION ${INSTALL_EXAMPLE})
-INSTALL (FILES LICENSE DESTINATION ${INSTALL_DATA})
+#TODO: improve tests
+file ( WRITE t/t.lua " require 'ssl' require 'ssl.https' " )
+add_lua_test ( t/t.lua )
+
