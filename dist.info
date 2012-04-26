@@ -10,6 +10,7 @@ url = "http://www.inf.puc-rio.br/~brunoos/luasec/"
 maintainer = "Peter Drahoš"
 
 depends = {
+	"luasocket~>2.0",
 	"openssl ~>1.0",
 	"lua ~>5.1"
 }
