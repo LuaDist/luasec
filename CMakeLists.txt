@@ -31,7 +31,3 @@ install_lua_module ( ssl.https src/https.lua )
 install_example ( samples/ )
 install_data ( LICENSE )
 
-#TODO: improve tests
-file ( WRITE t/t.lua " require 'ssl' require 'ssl.https' " )
-add_lua_test ( t/t.lua )
-
