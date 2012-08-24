@@ -5,7 +5,7 @@
 # Please note that the package source code is licensed under its own license.
 
 project ( luasec C )
-cmake_minimum_required ( VERSION 2.6 )
+cmake_minimum_required ( VERSION 2.8 )
 include ( cmake/dist.cmake )
 include ( lua )
 
@@ -30,8 +30,4 @@ install_lua_module ( ssl src/ssl.lua )
 install_lua_module ( ssl.https src/https.lua )
 install_example ( samples/ )
 install_data ( LICENSE )
-
-#TODO: improve tests
-file ( WRITE t/t.lua " require 'ssl' require 'ssl.https' " )
-add_lua_test ( t/t.lua )
 
